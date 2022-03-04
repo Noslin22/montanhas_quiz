@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:http/http.dart';
@@ -7,11 +8,17 @@ import 'package:http/http.dart';
 class DatabaseProvider {
   static final DatabaseProvider _instance = DatabaseProvider._internal();
 
+  final ValueNotifier<List<QuestionModel>> questionsNotifier =
+      ValueNotifier([]);
+  List<QuestionModel> get questions => questionsNotifier.value;
+  set questions(List<QuestionModel> questions) =>
+      questionsNotifier.value = questions;
+
   factory DatabaseProvider() => _instance;
 
   DatabaseProvider._internal();
 
-  Future<List<QuestionModel>> getQuestions(UserModel user) async {
+  Future<bool> getQuestions(UserModel user) async {
     String credencials = "Bearer ${user.token!}";
 
     Response response = await get(
@@ -19,11 +26,12 @@ class DatabaseProvider {
       headers: {'authorization': credencials},
     );
     if (response.statusCode == 200) {
-      List<dynamic> questions = jsonDecode(response.body);
+      List<dynamic> jsonList = jsonDecode(response.body);
 
-      return questions.map((e) => QuestionModel.fromMap(e, user.nome)).toList();
+      questions =
+          jsonList.map((e) => QuestionModel.fromMap(e, user.nome)).toList();
     }
-    return [];
+    return response.statusCode == 200;
   }
 
   Future<bool> rightQuestion(UserModel user) async {
@@ -47,16 +55,20 @@ class DatabaseProvider {
     String credencials = "Bearer ${user.token!}";
 
     Request request = Request(
-      "PUT",
-      Uri.parse('https://db-montanhas.herokuapp.com/questions/${question.id}'),
+      "POST",
+      Uri.parse(
+          'https://db-montanhas.herokuapp.com/questions/${question.id}/users'),
     );
     request.headers.addAll({
       'Authorization': credencials,
       'Content-Type': 'application/json',
     });
-    request.body = user.toJson();
+    request.body = jsonEncode({"user": user.nome});
 
     StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      getQuestions(user);
+    }
     return response.statusCode == 200;
   }
 }

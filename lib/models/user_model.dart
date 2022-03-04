@@ -6,7 +6,9 @@ class UserModel {
   String nome;
   String email;
   String id;
-  String senha;
+  String password;
+  bool isAdm;
+
   final ValueNotifier<double> percentNotifier;
   double get percent => percentNotifier.value;
   set percent(double value) => percentNotifier.value = value;
@@ -14,9 +16,10 @@ class UserModel {
   String? token;
 
   UserModel({
+    this.isAdm = false,
     required this.nome,
     required this.email,
-    required this.senha,
+    required this.password,
     required this.id,
     required double percent,
     this.token,
@@ -28,18 +31,20 @@ class UserModel {
       'email': email,
       'id': id,
       'token': token,
-      'password': senha,
-      'percent': percent
+      'password': password,
+      'percent': percent,
+      'isAdm': isAdm
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       nome: map["user"]['name'] ?? '',
-      senha: map["user"]['password'] ?? '',
+      password: map["user"]['password'] ?? '',
       percent: map["user"]['percent'] ?? 0,
       email: map["user"]['email'] ?? '',
       id: map["user"]['id'] ?? '',
+      isAdm: map["user"]['isAdm'] ?? false,
       token: map['token'] ?? '',
     );
   }
@@ -60,14 +65,15 @@ class UserModel {
     double? percent,
     String? id,
     String? token,
+    bool? isAdm,
   }) {
     return UserModel(
       nome: nome ?? this.nome,
       percent: percent ?? this.percent,
-      senha: password ?? this.senha,
+      password: password ?? this.password,
       email: email ?? this.email,
       id: id ?? this.id,
-      token: token ?? this.token,
+      token: token ?? this.token, isAdm: isAdm ?? this.isAdm,
     );
   }
 }

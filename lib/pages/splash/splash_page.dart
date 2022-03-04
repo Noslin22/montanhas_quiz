@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:montanhas_quiz/pages/home/home_page.dart';
 import 'package:montanhas_quiz/pages/login/login_page.dart';
+import 'package:montanhas_quiz/server/auth_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -13,15 +16,31 @@ class _SplashPageState extends State<SplashPage>
   late AnimationController _animationController;
   late Animation<double> _animation;
   void changePage(BuildContext context) {
-    
     _animationController.forward();
     Future.delayed(
       const Duration(seconds: 3),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      ),
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        _animationController.dispose();
+        List<String>? user = prefs.getStringList("user");
+        if (user != null) {
+          await AuthProvider().login(email: user[0], password: user[1]);
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                user: AuthProvider().user,
+              ),
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -29,10 +48,8 @@ class _SplashPageState extends State<SplashPage>
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2700),
-    )..addListener(() {
-        setState(() {});
-      });
+      duration: const Duration(milliseconds: 2500),
+    );
 
     _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.easeInCubic));
@@ -71,9 +88,12 @@ class _SplashPageState extends State<SplashPage>
                     Padding(
                       padding: const EdgeInsets.only(bottom: 50),
                       child: Center(
-                        child: Image.asset(
-                          "assets/montanhas.png",
-                          scale: scale,
+                        child: Hero(
+                          tag: "montanhas",
+                          child: Image.asset(
+                            "assets/montanhas.png",
+                            scale: scale,
+                          ),
                         ),
                       ),
                     ),

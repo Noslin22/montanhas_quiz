@@ -26,6 +26,7 @@ class QuestionModel {
       title: title,
       subtitle: subtitle,
       today: today,
+      answered: !notAnswered,
     );
   }
 
@@ -52,7 +53,12 @@ class QuestionModel {
         ),
       ),
       id: map["id"],
-      notAnswered: (map["users"] as List<Map>).firstWhere((element) => element["user"] == userName).isEmpty,
+      notAnswered: (map["users"] as List<dynamic>)
+          .firstWhere(
+            (element) => element["user"] == userName,
+            orElse: () => [],
+          )
+          .isEmpty,
     );
   }
 

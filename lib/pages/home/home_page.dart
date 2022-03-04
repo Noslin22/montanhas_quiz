@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'package:montanhas_quiz/models/answer_model.dart';
-import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
+import 'package:montanhas_quiz/pages/home/widgets/adm_drawer.dart';
 import 'package:montanhas_quiz/pages/home/widgets/percent_card.dart';
-import 'package:montanhas_quiz/pages/quiz/quiz_page.dart';
-import 'package:montanhas_quiz/server/database_provider.dart';
+import 'package:montanhas_quiz/pages/home/widgets/question_list.dart';
+import 'package:montanhas_quiz/pages/login/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -18,15 +17,41 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Olá, ${user.nome}",
-          style: Theme.of(context).textTheme.headline1!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
-                fontSize: 17,
+        title: GestureDetector(
+          onLongPress: () {
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text("Deseja realmente sair?"),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.clear();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(),
+                        ),
+                      );
+                    },
+                    child: const Text("Sim"),
+                  ),
+                ],
               ),
+            );
+          },
+          child: Text(
+            "Olá, ${user.nome}",
+            style: Theme.of(context).textTheme.headline1!.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 17,
+                ),
+          ),
         ),
       ),
+      drawer: user.isAdm ? const AdmDrawer() : null,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -35,92 +60,9 @@ class HomePage extends StatelessWidget {
               value: user.percentNotifier,
             ),
             Flexible(
-              child: StreamBuilder<List<QuestionModel>?>(
-                  stream: DatabaseProvider().getQuestions(user).asStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          snapshot.error!.toString(),
-                        ),
-                      );
-                    } else if (!snapshot.hasData) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasData && snapshot.data == null) {
-                      return const Center(
-                        child: Text("Sem Perguntas :("),
-                      );
-                    } else {
-                      List<QuestionModel> questions = snapshot.data!;
-                      return ListView.builder(
-                        itemCount: questions.length,
-                        itemBuilder: (context, index) {
-                          QuestionModel model =
-                              questions.reversed.toList()[index];
-                          Widget questionTile = model.toQuestionTile()
-                            ..onTap = () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => QuizPage(
-                                    model: model,
-                                    number: questions.length - index,
-                                  ),
-                                ),
-                              );
-                            };
-                          if (index == 0) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Quiz de Hoje",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline3!
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        ),
-                                  ),
-                                  questionTile,
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else if (index == 1) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Quizes Passados",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline3!
-                                        .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                        ),
-                                  ),
-                                  questionTile,
-                                ],
-                              ),
-                            );
-                          } else {
-                            return questionTile;
-                          }
-                        },
-                        shrinkWrap: true,
-                      );
-                    }
-                  }),
+              child: QuestionList(
+                user: user,
+              ),
             ),
           ],
         ),

@@ -71,42 +71,34 @@ class _QuizPageState extends State<QuizPage> {
             const Spacer(),
             ElevatedButton(
               onPressed: _answer != null
-                  ? () {
+                  ? () async {
                       int correctAnswer = widget.model.answers.indexWhere(
                         (element) => element.isCorrect,
                       );
                       UserModel user = AuthProvider().user;
+                      double percent = double.parse((1 / 7).toStringAsFixed(4));
                       if (_answer == correctAnswer) {
-                        if (user.percent +
-                                double.parse(
-                                  (1 / 7).toStringAsFixed(4),
-                                ) <=
-                            1) {
-                          user.percent += double.parse(
-                            (1 / 7).toStringAsFixed(4),
-                          );
-                          DatabaseProvider().rightQuestion(user);
-                        } else {
-                          user.percent = (user.percent +
-                                  double.parse(
-                                    (1 / 7).toStringAsFixed(4),
-                                  ))
-                              .floorToDouble();
-                          DatabaseProvider().rightQuestion(user);
+                        user.percent += percent;
+                        await DatabaseProvider().rightQuestion(user);
+
+                        if (user.percent + percent >= 1) {
                           MessageSnackBar(
                             context: context,
                             message: "Você acertou todas!!!",
                           ).showMessage();
-                        }
+                        } else {}
                       }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResultPage(
-                            win: _answer == correctAnswer,
+                      if (await DatabaseProvider()
+                          .doneQuestion(user, widget.model)) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResultPage(
+                              win: _answer == correctAnswer,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   : null,
               child: const Text("Confirmar"),

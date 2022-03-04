@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider {
   static final AuthProvider _instance = AuthProvider._internal();
@@ -13,6 +14,8 @@ class AuthProvider {
   Future<bool> login({required String email, required String password}) async {
     String info = "$email:$password";
     String encode = base64Encode(info.codeUnits);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('user', [email, password]);
 
     String credencials = "Basic $encode";
 
@@ -20,7 +23,6 @@ class AuthProvider {
       Uri.parse('https://db-montanhas.herokuapp.com/auth'),
       headers: {'authorization': credencials},
     );
-
     if (response.statusCode == 200) {
       user = UserModel.fromJson(response.body).copyWith(password: password);
     }
