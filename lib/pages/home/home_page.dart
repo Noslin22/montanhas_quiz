@@ -28,11 +28,12 @@ class HomePage extends StatelessWidget {
                     onPressed: () async {
                       final prefs = await SharedPreferences.getInstance();
                       prefs.clear();
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                           builder: (_) => LoginPage(),
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     child: const Text("Sim"),

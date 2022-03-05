@@ -44,7 +44,7 @@ class ResultPage extends StatelessWidget {
         child: Text(
           win
               ? "Não esqueça de continuar estudando e voltar amanhã"
-              : "Parece que você não estudo 100%, estude mais e volte amanhã",
+              : "Parece que você não estudou 100%, estude mais e volte amanhã",
           style: Theme.of(context).textTheme.headline6,
           textAlign: TextAlign.center,
         ),
