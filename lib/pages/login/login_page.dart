@@ -1,32 +1,36 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:montanhas_quiz/global/widgets/field.dart';
+import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:montanhas_quiz/pages/home/home_page.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/pages/register/register_page.dart';
-import 'package:montanhas_quiz/utils/message_snackbar.dart';
+import 'package:montanhas_quiz/global/message_snackbar.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController senhaController = TextEditingController();
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode senhaFocus = FocusNode();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  UserModel user = UserModel();
+  bool obscure = true;
+  bool save = true;
 
   Future<void> submit(BuildContext ctx) async {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       if (await AuthProvider().login(
-        email: emailController.text,
-        password: senhaController.text,
+        email: user.email!,
+        password: user.password!,
+        save: save,
       )) {
         Navigator.of(ctx).pushReplacement(
           MaterialPageRoute(
-            builder: (ctx) => HomePage(
-              user: AuthProvider().user,
-            ),
+            builder: (ctx) => const HomePage(),
           ),
         );
       } else {
@@ -59,57 +63,75 @@ class LoginPage extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      TextFormField(
-                        focusNode: emailFocus,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        keyboardType: TextInputType.emailAddress,
+                      Field(
+                        onComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                        onSaved: (text) {
+                          user = user.copyWith(email: text);
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Este campo é obrigatório";
+                          } else if (!RegExp(
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(value)) {
+                            return "Email inválido";
                           }
                           return null;
                         },
-                        textInputAction: TextInputAction.next,
-                        onEditingComplete: () {
-                          FocusScope.of(context).nextFocus();
-                        },
-                        controller: emailController,
-                        style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: "Email:",
-                        ),
+                        action: TextInputAction.next,
+                        label: "Email",
+                        type: TextInputType.emailAddress,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: TextFormField(
-                          focusNode: senhaFocus,
-                          keyboardType: TextInputType.visiblePassword,
-                          textInputAction: TextInputAction.done,
-                          controller: senhaController,
+                        child: Field(
+                          type: TextInputType.visiblePassword,
+                          action: TextInputAction.done,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Este campo é obrigatório";
                             }
                             return null;
                           },
-                          onEditingComplete: () async {
-                            await submit(context);
+                          onSaved: (text) {
+                            user = user.copyWith(password: text);
                           },
-                          obscureText: true,
-                          style: GoogleFonts.roboto(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: "Senha:",
+                          obscure: obscure,
+                          label: "Senha",
+                          suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                obscure = !obscure;
+                              });
+                            },
+                            icon: Icon(
+                              obscure
+                                  ? Icons.visibility_rounded
+                                  : Icons.visibility_off,
+                            ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            const Text("Deseja permanecer logado?"),
+                            Checkbox(
+                              value: save,
+                              onChanged: (check) {
+                                setState(() {
+                                  save = check!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
                         child: ElevatedButton(
                           onPressed: () async {
                             await submit(context);
@@ -129,7 +151,7 @@ class LoginPage extends StatelessWidget {
                                 ..onTap = () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => RegisterPage(),
+                                      builder: (context) => const RegisterPage(),
                                     ),
                                   );
                                 },

@@ -1,0 +1,1 @@
+enum Screens { home, manage, rank, prizes }

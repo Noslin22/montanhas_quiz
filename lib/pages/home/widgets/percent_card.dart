@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:montanhas_quiz/models/user_model.dart';
 
 import 'percent_indicator.dart';
 
 class PercentCard extends StatelessWidget {
-  final ValueNotifier<double> value;
+  final ValueNotifier<UserModel?> percent;
   const PercentCard({
     Key? key,
-    required this.value,
+    required this.percent,
   }) : super(key: key);
 
   @override
@@ -19,12 +20,10 @@ class PercentCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 24),
-              child: ValueListenableBuilder<double>(
-                valueListenable: value,
-                builder: (_, value, __) {
-                  return PercentIndicator(
-                    value: value,
-                  );
+              child: ValueListenableBuilder<UserModel?>(
+                valueListenable: percent,
+                builder: (_, user, __) {
+                  return PercentIndicator(value: user!.percent!);
                 }
               ),
             ),

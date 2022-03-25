@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:montanhas_quiz/pages/quiz/quiz_page.dart';
+import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';
 
 class QuestionList extends StatelessWidget {
@@ -27,16 +28,29 @@ class QuestionList extends StatelessWidget {
           return const Center(
             child: Text("Sem Perguntas :("),
           );
+        } else if (!snapshot.data!) {
+          AuthProvider().login(email: user.email!, password: user.password!);
+          return Container();
         } else {
           return ValueListenableBuilder<List<QuestionModel>>(
               valueListenable: DatabaseProvider().questionsNotifier,
-              builder: (_, questions, __) {
+              builder: (_, values, __) {
+                final List questions = values
+                    .where(
+                      (element) => !DateTime.parse(element.subtitle!
+                              .split(" ")[1]
+                              .split("/")
+                              .reversed
+                              .join())
+                          .isAfter(DateTime.now()),
+                    )
+                    .toList();
                 return ListView.builder(
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
-                    QuestionModel model = questions.reversed.toList()[index];
+                    QuestionModel model = questions[index];
                     Widget questionTile = model.toQuestionTile()
-                      ..onTap = model.notAnswered
+                      ..onTap = model.notAnswered!
                           ? () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:montanhas_quiz/pages/home/home_page.dart';
 import 'package:montanhas_quiz/pages/login/login_page.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
@@ -27,22 +28,20 @@ class _SplashPageState extends State<SplashPage>
           if (await AuthProvider().login(email: user[0], password: user[1])) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => HomePage(
-                  user: AuthProvider().user,
-                ),
+                builder: (context) => const HomePage(),
               ),
             );
           } else {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => LoginPage(),
+                builder: (context) => const LoginPage(),
               ),
             );
           }
         } else {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => LoginPage(),
+              builder: (context) => const LoginPage(),
             ),
           );
         }
@@ -56,7 +55,7 @@ class _SplashPageState extends State<SplashPage>
       vsync: this,
       duration: const Duration(milliseconds: 2500),
     );
-
+    Intl.defaultLocale = 'pt_BR';
     _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.easeInCubic));
     super.initState();
@@ -67,64 +66,17 @@ class _SplashPageState extends State<SplashPage>
     changePage(context);
     return SafeArea(
       child: Scaffold(
-        body: LayoutBuilder(builder: (context, constraints) {
-          double scale =
-              (constraints.biggest.width / constraints.biggest.height) * 1.5;
-          return Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    "assets/quiz_logo.png",
-                    scale: scale,
-                  ),
-                ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Image.asset(
-                          "assets/interrogacao.png",
-                          scale: scale,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 50),
-                        child: Center(
-                          child: Hero(
-                            tag: "montanhas",
-                            child: Image.asset(
-                              "assets/montanhas.png",
-                              scale: scale,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20),
-                  height: 10,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: AnimatedBuilder(
-                      animation: _animation,
-                      builder: (_, __) => LinearProgressIndicator(
-                        backgroundColor: const Color(0xffD6D6D6),
-                        value: _animation.value,
-                      ),
-                    ),
-                  ),
-                )
-              ],
+        body: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Center(
+            child: Hero(
+              tag: "montanhas",
+              child: Image.asset(
+                "assets/montanhas.png",
+              ),
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }

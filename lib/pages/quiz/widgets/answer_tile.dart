@@ -19,6 +19,9 @@ class AnswerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(model.text, style: Theme.of(context).textTheme.headline3),
+      onTap: () {
+        onChanged(value);
+      },
       trailing: Radio<int>(
         onChanged: onChanged,
         value: value,

@@ -24,5 +24,19 @@ class AnswerModel {
 
   String toJson() => json.encode(toMap());
 
-  factory AnswerModel.fromJson(String source) => AnswerModel.fromMap(json.decode(source));
+  factory AnswerModel.fromJson(String source) =>
+      AnswerModel.fromMap(json.decode(source));
+
+  AnswerModel copyWith({
+    String? text,
+    bool? isCorrect,
+  }) {
+    return AnswerModel(
+      text: text ?? this.text,
+      isCorrect: isCorrect ?? this.isCorrect,
+    );
+  }
+
+  @override
+  String toString() => 'AnswerModel(text: $text, isCorrect: $isCorrect)';
 }

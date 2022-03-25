@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montanhas_quiz/global/extensions/percent.dart';
 
 class PercentIndicator extends StatelessWidget {
   const PercentIndicator({
@@ -25,7 +26,7 @@ class PercentIndicator extends StatelessWidget {
           ),
         ),
         Text(
-          "${(value * 100).toStringAsFixed(2).contains(".00") ? (value * 100).toStringAsFixed(2).replaceAll(".00", "") : (value * 100).toStringAsFixed(0)}%",
+          value.percent(),
           style: Theme.of(context).textTheme.headline1,
         ),
       ],

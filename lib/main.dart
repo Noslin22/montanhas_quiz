@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:montanhas_quiz/pages/splash/splash_page.dart';
 
@@ -54,19 +56,17 @@ void main() {
             ),
           ),
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          hintStyle: GoogleFonts.roboto(
-            color: Colors.grey,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
       ),
       home: const SplashPage(),
+      scrollBehavior: const ScrollBehavior().copyWith(dragDevices: {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      }),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
     ),
   );
 }

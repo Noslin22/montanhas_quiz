@@ -1,35 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:montanhas_quiz/global/widgets/field.dart';
+import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
-import 'package:montanhas_quiz/utils/message_snackbar.dart';
+import 'package:montanhas_quiz/global/message_snackbar.dart';
 
 import '../home/home_page.dart';
 
-class RegisterPage extends StatelessWidget {
-  RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController senhaController = TextEditingController();
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
 
-  final FocusNode nomeFocus = FocusNode();
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode senhaFocus = FocusNode();
-
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  UserModel user = UserModel();
+
+  bool obscure = true;
 
   Future<void> submit(BuildContext ctx) async {
     if (_formKey.currentState!.validate()) {
       if (await AuthProvider().register(
-        email: emailController.text,
-        password: senhaController.text,
-        name: nomeController.text,
+        email: user.email!,
+        password: user.password!,
+        name: user.nome!,
       )) {
         Navigator.of(ctx).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (ctx) => HomePage(
-              user: AuthProvider().user,
-            ),
+            builder: (ctx) => const HomePage(),
           ),
           (Route<dynamic> route) => false,
         );
@@ -68,75 +67,72 @@ class RegisterPage extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      TextFormField(
-                        focusNode: nomeFocus,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        keyboardType: TextInputType.name,
+                      Field(
+                        type: TextInputType.name,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Este campo é obrigatório";
+                          } else if (value.length < 3) {
+                            return "O nome necessita de pelo menos 3 letras";
                           }
                           return null;
                         },
-                        textInputAction: TextInputAction.next,
-                        onEditingComplete: () {
+                        label: "Nome",
+                        action: TextInputAction.next,
+                        onComplete: () {
                           FocusScope.of(context).nextFocus();
                         },
-                        controller: nomeController,
-                        style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: "Nome:",
-                        ),
+                        onSaved: (text) {
+                          user = user.copyWith(nome: text);
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: TextFormField(
-                          focusNode: emailFocus,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          keyboardType: TextInputType.emailAddress,
+                        child: Field(
+                          type: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Este campo é obrigatório";
                             }
                             return null;
                           },
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () {
+                          label: "Email",
+                          action: TextInputAction.next,
+                          onComplete: () {
                             FocusScope.of(context).nextFocus();
                           },
-                          controller: emailController,
-                          style: GoogleFonts.roboto(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: "Email:",
-                          ),
+                          onSaved: (text) {
+                            user = user.copyWith(password: text);
+                          },
                         ),
                       ),
-                      TextFormField(
-                        focusNode: senhaFocus,
-                        keyboardType: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.done,
+                      Field(
+                        type: TextInputType.visiblePassword,
+                        action: TextInputAction.done,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Este campo é obrigatório";
+                          } else if (value.length < 6) {
+                            return "A senha precisa te no minimo 6 caracteres";
                           }
                           return null;
                         },
-                        onEditingComplete: () async {
-                          await submit(context);
+                        obscure: obscure,
+                        label: "Senha",
+                        onSaved: (text) {
+                          user = user.copyWith(password: text);
                         },
-                        controller: senhaController,
-                        style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: "Senha:",
+                        suffix: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              obscure = !obscure;
+                            });
+                          },
+                          icon: Icon(
+                            obscure
+                                ? Icons.visibility_rounded
+                                : Icons.visibility_off,
+                          ),
                         ),
                       ),
                       Padding(

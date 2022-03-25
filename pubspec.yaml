@@ -29,6 +29,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter 
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -37,6 +39,10 @@ dependencies:
   google_fonts:
   
   shared_preferences: ^2.0.13
+  intl: ^0.17.0
+  pdf: ^3.7.3
+  path_provider: ^2.0.9
+  printing: ^5.7.4
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +54,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  msix: ^3.3.1
 
+msix_config:
+  display_name: Montanhas Quiz
+  publisher_display_name: JN Productions
+  identity_name: com.jnproduction.montanhasquiz
+  msix_version: 1.0.0.0
+  logo_path: C:\Users\joaon\Documents\APP Quiz Adolescentes\Montanhas.png
+  capabilities: internetClient
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -1,36 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-
 class UserModel {
-  String nome;
-  String email;
-  String id;
-  String password;
-  bool isAdm;
-
-  final ValueNotifier<double> percentNotifier;
-  double get percent => percentNotifier.value;
-  set percent(double value) => percentNotifier.value = value;
-
+  final String? nome;
+  final String? email;
+  final String? id;
+  final String? password;
+  final bool? isAdm;
+  final double? percent;
   String? token;
 
   UserModel({
     this.isAdm = false,
-    required this.nome,
-    required this.email,
-    required this.password,
-    required this.id,
-    required double percent,
+    this.nome,
+    this.email,
+    this.password,
+    this.id,
+    this.percent,
     this.token,
-  }) : percentNotifier = ValueNotifier(percent);
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'name': nome,
       'email': email,
       'id': id,
-      'token': token,
       'password': password,
       'percent': percent,
       'isAdm': isAdm
@@ -45,6 +38,18 @@ class UserModel {
       email: map["user"]['email'] ?? '',
       id: map["user"]['id'] ?? '',
       isAdm: map["user"]['isAdm'] ?? false,
+      token: map['token'] ?? '',
+    );
+  }
+
+  factory UserModel.fromDatabase(Map<String, dynamic> map) {
+    return UserModel(
+      nome: map['name'] ?? '',
+      password: map['password'] ?? '',
+      percent: map['percent'] ?? 0,
+      email: map['email'] ?? '',
+      id: map['id'] ?? '',
+      isAdm: map['isAdm'] ?? false,
       token: map['token'] ?? '',
     );
   }
@@ -73,7 +78,33 @@ class UserModel {
       password: password ?? this.password,
       email: email ?? this.email,
       id: id ?? this.id,
-      token: token ?? this.token, isAdm: isAdm ?? this.isAdm,
+      token: token ?? this.token,
+      isAdm: isAdm ?? this.isAdm,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is UserModel &&
+        other.nome == nome &&
+        other.email == email &&
+        other.id == id &&
+        other.password == password &&
+        other.isAdm == isAdm &&
+        other.percent == percent &&
+        other.token == token;
+  }
+
+  @override
+  int get hashCode {
+    return nome.hashCode ^
+        email.hashCode ^
+        id.hashCode ^
+        password.hashCode ^
+        isAdm.hashCode ^
+        percent.hashCode ^
+        token.hashCode;
   }
 }
