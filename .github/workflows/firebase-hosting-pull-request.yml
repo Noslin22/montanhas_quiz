@@ -10,13 +10,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.10.0'
+          flutter-version: '2.10.3'
       - run: flutter pub get
       - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PAY_FLOW_E31ED }}'
-          projectId: pay-flow-e31ed
+          projectId: montanhas-27ba2
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
