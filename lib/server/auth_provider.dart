@@ -16,19 +16,24 @@ class AuthProvider {
   UserModel? get user => userNotifier.value;
   set user(UserModel? user) => userNotifier.value = user;
 
-  Future<bool> login({required String email, required String password, bool save = true}) async {
+  Future<bool> login(
+      {required String email,
+      required String password,
+      bool save = true}) async {
     String info = "$email:$password";
     String encode = base64Encode(info.codeUnits);
     if (save) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('user', [email, password]);
+      prefs.setStringList('user', [email, password]);
     }
 
     String credencials = "Basic $encode";
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/auth'),
-      headers: {'authorization': credencials},
+      headers: {
+        'authorization': credencials,
+      },
     );
     if (response.statusCode == 200) {
       user = UserModel.fromJson(response.body).copyWith(password: password);

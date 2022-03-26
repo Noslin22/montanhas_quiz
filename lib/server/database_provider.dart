@@ -26,7 +26,10 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
-      headers: {'authorization': credencials},
+      headers: {
+        'authorization': credencials,
+        'Access-Control-Allow-Origin': '*',
+      },
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -52,7 +55,10 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
-      headers: {'authorization': credencials},
+      headers: {
+        'authorization': credencials,
+        'Access-Control-Allow-Origin': '*',
+      },
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -79,7 +85,10 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/users'),
-      headers: {'authorization': credencials},
+      headers: {
+        'authorization': credencials,
+        'Access-Control-Allow-Origin': '*',
+      },
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);

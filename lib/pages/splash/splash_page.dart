@@ -12,17 +12,12 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+class _SplashPageState extends State<SplashPage>{
   void changePage(BuildContext context) {
-    _animationController.forward();
     Future.delayed(
       const Duration(seconds: 3),
       () async {
         final prefs = await SharedPreferences.getInstance();
-        _animationController.dispose();
         List<String>? user = prefs.getStringList("user");
         if (user != null) {
           if (await AuthProvider().login(email: user[0], password: user[1])) {
@@ -51,13 +46,7 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2500),
-    );
     Intl.defaultLocale = 'pt_BR';
-    _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: _animationController, curve: Curves.easeInCubic));
     super.initState();
   }
 
