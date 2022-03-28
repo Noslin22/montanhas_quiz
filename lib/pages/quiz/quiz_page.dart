@@ -57,6 +57,7 @@ class _QuizPageState extends State<QuizPage> {
           setState(() {
             timer.cancel();
           });
+          DatabaseProvider().doneQuestion(AuthProvider().user!, widget.model);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -72,6 +73,12 @@ class _QuizPageState extends State<QuizPage> {
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override

@@ -16,7 +16,7 @@ class RankPdf {
     final ByteData montanhasImage =
         await rootBundle.load('assets/montanhas.png');
     Document doc = Document();
-    print(questions.first.question.toString());
+
     doc.addPage(Page(
       pageFormat: PdfPageFormat.a4,
       build: (Context context) {
@@ -71,24 +71,25 @@ class RankPdf {
                       direction: Axis.vertical,
                       spacing: 2,
                       children: [
-                        // for (var i = 0; i < questions.length; i++)
-                        Expanded(
-                          child: Text(
-                            "${questions.first.question.toString()}",
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.span,
-                            tightBounds: true,
-                            softWrap: true,
-                          ),
-                        ),
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-
-                        //   ],
-                        // )
+                        for (var i = 0; i < questions.length; i++)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Text("${i + 1}. "),
+                                  Text(
+                                    "${questions[i].question!.substring(0, questions[i].question!.length > 63 ? 63 : questions[i].question!.length)}${questions[i].question!.length > 63 ? "..." : ""}",
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                "Resposta: ${questions[i].answers.firstWhere((element) => element.isCorrect).text}",
+                              ),
+                            ],
+                          )
                       ],
                     ),
                   ],
