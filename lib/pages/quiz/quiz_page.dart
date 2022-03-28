@@ -57,7 +57,13 @@ class _QuizPageState extends State<QuizPage> {
           setState(() {
             timer.cancel();
           });
-          DatabaseProvider().doneQuestion(AuthProvider().user!, widget.model);
+          DatabaseProvider().doneQuestion(
+              AuthProvider().user!,
+              widget.model,
+              _answer ==
+                  widget.model.answers.indexWhere(
+                    (element) => element.isCorrect,
+                  ));
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -147,8 +153,8 @@ class _QuizPageState extends State<QuizPage> {
                       }
                       Navigator.pop(context);
                     }
-                    if (await DatabaseProvider()
-                        .doneQuestion(user, widget.model)) {
+                    if (await DatabaseProvider().doneQuestion(
+                        user, widget.model, _answer == correctAnswer)) {
                       Navigator.pop(context);
                       Navigator.push(
                         context,

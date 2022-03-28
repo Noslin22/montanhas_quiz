@@ -8,12 +8,14 @@ class QuestionTile extends StatelessWidget {
     required this.subtitle,
     this.today = false,
     this.answered = false,
+    required this.correct,
     this.onTap,
   }) : super(key: key);
   final String title;
   final String subtitle;
   final bool today;
   final bool answered;
+  final bool correct;
   VoidCallback? onTap;
 
   @override
@@ -41,9 +43,12 @@ class QuestionTile extends StatelessWidget {
           ),
         ),
         answered
-            ? const Icon(
+            ? correct ? const Icon(
                 Icons.check_rounded,
                 color: Colors.green,
+              ) : const Icon(
+                Icons.close,
+                color: Colors.red,
               )
             : Container()
       ],

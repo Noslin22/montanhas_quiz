@@ -114,7 +114,7 @@ class DatabaseProvider {
     return response.statusCode == 200;
   }
 
-  Future<bool> doneQuestion(UserModel user, QuestionModel question) async {
+  Future<bool> doneQuestion(UserModel user, QuestionModel question, bool correct) async {
     String credencials = "Bearer ${user.token!}";
 
     Request request = Request(
@@ -125,7 +125,7 @@ class DatabaseProvider {
       'Authorization': credencials,
       'Content-Type': 'application/json',
     });
-    request.body = jsonEncode({"user": user.nome});
+    request.body = jsonEncode({"user": user.nome, "correct": correct});
 
     StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
