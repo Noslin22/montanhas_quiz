@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
 import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:http/http.dart';
@@ -27,8 +27,7 @@ class DatabaseProvider {
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
       headers: {
-        'authorization': credencials,
-        'Access-Control-Allow-Origin': '*',
+        'authorization': credencials
       },
     );
     if (response.statusCode == 200) {
@@ -56,8 +55,7 @@ class DatabaseProvider {
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
       headers: {
-        'authorization': credencials,
-        'Access-Control-Allow-Origin': '*',
+        'authorization': credencials
       },
     );
     if (response.statusCode == 200) {
@@ -86,8 +84,7 @@ class DatabaseProvider {
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/users'),
       headers: {
-        'authorization': credencials,
-        'Access-Control-Allow-Origin': '*',
+        'authorization': credencials
       },
     );
     if (response.statusCode == 200) {
@@ -122,8 +119,7 @@ class DatabaseProvider {
 
     Request request = Request(
       "POST",
-      Uri.parse(
-          'https://db-montanhas.herokuapp.com/questions/${question.id}/users'),
+      Uri.parse('https://db-montanhas.herokuapp.com/questions/${question.id}/users'),
     );
     request.headers.addAll({
       'Authorization': credencials,

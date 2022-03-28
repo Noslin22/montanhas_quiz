@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:montanhas_quiz/global/extensions/captalize.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
 import 'package:montanhas_quiz/global/widgets/field.dart';
 import 'package:montanhas_quiz/models/answer_model.dart';
 import 'package:montanhas_quiz/models/question_model.dart';

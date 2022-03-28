@@ -6,7 +6,7 @@ import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/global/extensions/captalize.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
 
 class AddQuestion extends StatefulWidget {
   const AddQuestion({Key? key}) : super(key: key);

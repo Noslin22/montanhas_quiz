@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:montanhas_quiz/global/widgets/drawer/adm_drawer.dart';
@@ -9,10 +7,10 @@ import 'package:montanhas_quiz/global/widgets/drawer/screens.dart';
 import 'package:montanhas_quiz/pages/rank/widgets/rank_pdf.dart';
 import 'package:montanhas_quiz/pages/rank/widgets/rank_tile.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
+import '../../global/utils/loading_dialog.dart';
 import '../../models/question_model.dart';
 import '../../models/user_model.dart';
 
@@ -59,7 +57,8 @@ class _RankPageState extends State<RankPage> {
         future: users,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<UserModel> users = snapshot.data!;
+            List<UserModel> users =
+                snapshot.data!.where((element) => !element.isAdm!).toList();
             return Column(
               children: [
                 Expanded(
@@ -74,10 +73,12 @@ class _RankPageState extends State<RankPage> {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    LoadingDialog.showLoading(context);
                     Uint8List bytes = await RankPdf.buildPdf(
                       questions: questions,
                       users: users,
                     );
+                    Navigator.pop(context);
                     String date = DateFormat("dd/MM/y").format(DateTime.now());
                     await Printing.layoutPdf(
                       onLayout: (PdfPageFormat format) => bytes,

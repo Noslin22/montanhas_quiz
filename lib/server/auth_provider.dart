@@ -56,6 +56,7 @@ class AuthProvider {
     request.body = jsonEncode({
       "name": name,
       "email": email,
+      "isAdm": false,
       "password": password,
       "percent": 0.00,
     });

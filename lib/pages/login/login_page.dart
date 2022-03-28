@@ -5,7 +5,9 @@ import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:montanhas_quiz/pages/home/home_page.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/pages/register/register_page.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
+
+import '../../global/utils/loading_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> submit(BuildContext ctx) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      LoadingDialog.showLoading(context);
       if (await AuthProvider().login(
         email: user.email!,
         password: user.password!,
@@ -34,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       } else {
+        Navigator.pop(context);
         MessageSnackBar(
           context: ctx,
           message: "O email ou a senha estão incorretos",
@@ -98,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           onSaved: (text) {
                             user = user.copyWith(password: text);
                           },
+                          onComplete: ()=>submit(context),
                           obscure: obscure,
                           label: "Senha",
                           suffix: IconButton(
@@ -151,7 +156,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ..onTap = () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => const RegisterPage(),
+                                      builder: (context) =>
+                                          const RegisterPage(),
                                     ),
                                   );
                                 },

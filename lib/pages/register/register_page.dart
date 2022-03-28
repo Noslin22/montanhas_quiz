@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:montanhas_quiz/global/utils/loading_dialog.dart';
 import 'package:montanhas_quiz/global/widgets/field.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
 
 import '../home/home_page.dart';
 
@@ -21,6 +22,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> submit(BuildContext ctx) async {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      LoadingDialog.showLoading(context);
       if (await AuthProvider().register(
         email: user.email!,
         password: user.password!,
@@ -33,6 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
           (Route<dynamic> route) => false,
         );
       } else {
+        Navigator.pop(context);
         MessageSnackBar(
           context: ctx,
           message: "Houve um erro ao registrar, tente novamente mais tarde",
@@ -102,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             FocusScope.of(context).nextFocus();
                           },
                           onSaved: (text) {
-                            user = user.copyWith(password: text);
+                            user = user.copyWith(email: text);
                           },
                         ),
                       ),
@@ -117,6 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                           return null;
                         },
+                        onComplete: ()=>submit(context),
                         obscure: obscure,
                         label: "Senha",
                         onSaved: (text) {

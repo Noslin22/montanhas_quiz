@@ -16,6 +16,7 @@ class RankPdf {
     final ByteData montanhasImage =
         await rootBundle.load('assets/montanhas.png');
     Document doc = Document();
+    print(questions.first.question.toString());
     doc.addPage(Page(
       pageFormat: PdfPageFormat.a4,
       build: (Context context) {
@@ -44,7 +45,7 @@ class RankPdf {
               ),
               SizedBox(height: 12),
               Text(
-                "Boletim Semanal - ${questions.first.subtitle!.split(" ")[1].substring(3)} a ${questions.last.subtitle!.split(" ")[1].substring(3)}",
+                "Boletim Semanal - ${questions.first.subtitle!.split(" ")[1].substring(0, 5)} a ${questions.last.subtitle!.split(" ")[1].substring(0, 5)}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
@@ -70,25 +71,24 @@ class RankPdf {
                       direction: Axis.vertical,
                       spacing: 2,
                       children: [
-                        for (var i = 0; i < questions.length; i++)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text((i + 1).toString() +
-                                  ". " +
-                                  questions[i].question!),
-                              Text(
-                                "Resposta: " +
-                                    questions[i]
-                                        .answers
-                                        .firstWhere(
-                                            (element) => element.isCorrect)
-                                        .text,
-                              ),
-                            ],
-                          )
+                        // for (var i = 0; i < questions.length; i++)
+                        Expanded(
+                          child: Text(
+                            "${questions.first.question.toString()}",
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.span,
+                            tightBounds: true,
+                            softWrap: true,
+                          ),
+                        ),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+
+                        //   ],
+                        // )
                       ],
                     ),
                   ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
 import 'package:montanhas_quiz/models/question_model.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';

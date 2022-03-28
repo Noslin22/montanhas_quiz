@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:montanhas_quiz/pages/quiz/widgets/answer_tile.dart';
 import 'package:montanhas_quiz/pages/quiz/widgets/result_page.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';
-import 'package:montanhas_quiz/global/message_snackbar.dart';
+import 'package:montanhas_quiz/global/utils/message_snackbar.dart';
+
+import '../../global/utils/loading_dialog.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({
@@ -25,6 +28,8 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   int? _answer;
+  late Timer timer;
+  int counter = 15;
 
   @override
   void initState() {
@@ -32,10 +37,41 @@ class _QuizPageState extends State<QuizPage> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    startTimer();
+    super.didChangeDependencies();
+  }
+
   void setAnswer(int? value) {
     setState(() {
       _answer = value;
     });
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) {
+        if (counter == 0) {
+          setState(() {
+            timer.cancel();
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ResultPage(
+                win: false,
+              ),
+            ),
+          );
+        } else {
+          setState(() {
+            counter--;
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -53,7 +89,10 @@ class _QuizPageState extends State<QuizPage> {
                   const Text("de 7"),
                 ],
               ),
-              const SizedBox(height: 64),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22),
+                child: Text(counter.toString()),
+              ),
               Flexible(
                   child: Text(widget.model.question!,
                       style: Theme.of(context).textTheme.headline4)),
@@ -85,12 +124,8 @@ class _QuizPageState extends State<QuizPage> {
                     );
                     UserModel user = AuthProvider().user!;
                     double percent = double.parse((1 / 7).toStringAsFixed(4));
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        useSafeArea: false,
-                        builder: (_) =>
-                            const Center(child: CircularProgressIndicator()));
+
+                    LoadingDialog.showLoading(context);
                     if (_answer == correctAnswer) {
                       if (user.percent!.toInt() + percent.toInt() >= 1) {
                         MessageSnackBar(
