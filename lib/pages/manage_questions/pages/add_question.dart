@@ -164,6 +164,7 @@ class _AddQuestionState extends State<AddQuestion> {
               onSaved: (text) {
                 question = question.copyWith(question: text);
               },
+              limitLenght: true,
               label: "Pergunta",
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -186,10 +187,19 @@ class _AddQuestionState extends State<AddQuestion> {
                       type: TextInputType.name,
                       action: TextInputAction.next,
                       onSaved: (text) {
-                        question.answers[0] = AnswerModel(
-                          text: text!,
-                          isCorrect: correctAnswer == 0,
-                        );
+                        if (question.answers.isEmpty) {
+                          question.answers.add(
+                            AnswerModel(
+                              text: text!,
+                              isCorrect: correctAnswer == 0,
+                            ),
+                          );
+                        } else {
+                          question.answers[0] = AnswerModel(
+                            text: text!,
+                            isCorrect: correctAnswer == 0,
+                          );
+                        }
                       },
                       label: "Resposta 1",
                       showError: true,
@@ -218,10 +228,19 @@ class _AddQuestionState extends State<AddQuestion> {
                       type: TextInputType.name,
                       action: TextInputAction.next,
                       onSaved: (text) {
-                        question.answers[1] = AnswerModel(
-                          text: text!,
-                          isCorrect: correctAnswer == 1,
-                        );
+                        if (question.answers.length < 2) {
+                          question.answers.add(
+                            AnswerModel(
+                              text: text!,
+                              isCorrect: correctAnswer == 1,
+                            ),
+                          );
+                        } else {
+                          question.answers[1] = AnswerModel(
+                            text: text!,
+                            isCorrect: correctAnswer == 1,
+                          );
+                        }
                       },
                       label: "Resposta 2",
                       showError: true,
@@ -253,10 +272,19 @@ class _AddQuestionState extends State<AddQuestion> {
                     action: TextInputAction.next,
                     type: TextInputType.name,
                     onSaved: (text) {
-                      question.answers[2] = AnswerModel(
-                        text: text!,
-                        isCorrect: correctAnswer == 2,
-                      );
+                      if (question.answers.length < 3) {
+                        question.answers.add(
+                          AnswerModel(
+                            text: text!,
+                            isCorrect: correctAnswer == 2,
+                          ),
+                        );
+                      } else {
+                        question.answers[2] = AnswerModel(
+                          text: text!,
+                          isCorrect: correctAnswer == 2,
+                        );
+                      }
                     },
                     label: "Resposta 3",
                     showError: false,
@@ -292,10 +320,19 @@ class _AddQuestionState extends State<AddQuestion> {
                       _formKey.currentState!.save();
                     },
                     onSaved: (text) {
-                      question.answers[3] = AnswerModel(
-                        text: text!,
-                        isCorrect: correctAnswer == 3,
-                      );
+                      if (question.answers.length < 4) {
+                        question.answers.add(
+                          AnswerModel(
+                            text: text!,
+                            isCorrect: correctAnswer == 3,
+                          ),
+                        );
+                      } else {
+                        question.answers[3] = AnswerModel(
+                          text: text!,
+                          isCorrect: correctAnswer == 3,
+                        );
+                      }
                     },
                     label: "Resposta 4",
                     showError: false,

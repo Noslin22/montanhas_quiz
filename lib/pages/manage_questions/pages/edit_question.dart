@@ -188,6 +188,7 @@ class _EditQuestionState extends State<EditQuestion> {
               onSaved: (text) {
                 question = question.copyWith(question: text);
               },
+              limitLenght: true,
               label: "Pergunta",
               value: question.question ?? "",
               validator: (value) {
@@ -211,10 +212,10 @@ class _EditQuestionState extends State<EditQuestion> {
                       type: TextInputType.name,
                       action: TextInputAction.next,
                       onSaved: (text) {
-                        question.answers.insert(
-                            0,
-                            AnswerModel(
-                                text: text!, isCorrect: correctAnswer == 0));
+                        question.answers[0] = AnswerModel(
+                          text: text!,
+                          isCorrect: correctAnswer == 0,
+                        );
                       },
                       label: "Resposta 1",
                       showError: true,
@@ -246,10 +247,10 @@ class _EditQuestionState extends State<EditQuestion> {
                       type: TextInputType.name,
                       action: TextInputAction.next,
                       onSaved: (text) {
-                        question.answers.insert(
-                            1,
-                            AnswerModel(
-                                text: text!, isCorrect: correctAnswer == 1));
+                        question.answers[1] = AnswerModel(
+                          text: text!,
+                          isCorrect: correctAnswer == 1,
+                        );
                       },
                       label: "Resposta 2",
                       showError: true,
@@ -284,10 +285,10 @@ class _EditQuestionState extends State<EditQuestion> {
                     action: TextInputAction.next,
                     type: TextInputType.name,
                     onSaved: (text) {
-                      question.answers.insert(
-                          2,
-                          AnswerModel(
-                              text: text!, isCorrect: correctAnswer == 2));
+                      question.answers[2] = AnswerModel(
+                        text: text!,
+                        isCorrect: correctAnswer == 2,
+                      );
                     },
                     label: "Resposta 3",
                     showError: false,
@@ -323,12 +324,13 @@ class _EditQuestionState extends State<EditQuestion> {
                     action: TextInputAction.done,
                     type: TextInputType.name,
                     onSaved: (text) {
-                      question.answers.insert(
-                          3,
-                          AnswerModel(
-                              text: text!, isCorrect: correctAnswer == 3));
+                      question.answers[3] = AnswerModel(
+                        text: text!,
+                        isCorrect: correctAnswer == 3,
+                      );
                     },
                     label: "Resposta 4",
+                    onChanged: (_) => _formKey.currentState!.save(),
                     showError: false,
                     value: question.answers.isEmpty
                         ? ""

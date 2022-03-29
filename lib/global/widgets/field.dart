@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Field extends StatelessWidget {
@@ -13,9 +14,11 @@ class Field extends StatelessWidget {
     this.onSaved,
     this.showError = true,
     this.obscure = false,
+    this.limitLenght = false,
     this.suffix,
     this.value,
-    this.onTap, this.onChanged,
+    this.onTap,
+    this.onChanged,
   }) : super(key: key);
 
   final FocusNode? focus;
@@ -26,6 +29,7 @@ class Field extends StatelessWidget {
   final TextInputAction action;
   final TextInputType type;
   final bool showError;
+  final bool limitLenght;
   final Widget? suffix;
   final Function(String?)? onSaved;
   final bool obscure;
@@ -40,8 +44,13 @@ class Field extends StatelessWidget {
       keyboardType: type,
       validator: validator,
       onTap: onTap,
+      
       readOnly: onTap != null ? true : false,
       textInputAction: action,
+      maxLengthEnforcement: limitLenght
+          ? MaxLengthEnforcement.enforced
+          : MaxLengthEnforcement.none,
+      maxLength: limitLenght ? 60 : null,
       onEditingComplete: onComplete,
       style: GoogleFonts.roboto(
         fontSize: 14,
@@ -52,6 +61,7 @@ class Field extends StatelessWidget {
       onChanged: onChanged,
       onSaved: onSaved,
       decoration: InputDecoration(
+        
         labelText: "$label:",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
