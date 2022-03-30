@@ -30,6 +30,7 @@ class _EditQuestionState extends State<EditQuestion> {
   }
 
   int correctAnswer = 0;
+  int chars = 0;
 
   void changeAnswer(int? value) {
     setState(() {
@@ -136,6 +137,7 @@ class _EditQuestionState extends State<EditQuestion> {
                       onChanged: (value) {
                         setState(() {
                           question = value!;
+                          chars = value.question?.length ?? 0;
                           correctAnswer = value.answers
                               .indexWhere((element) => element.isCorrect);
                         });
@@ -188,7 +190,18 @@ class _EditQuestionState extends State<EditQuestion> {
               onSaved: (text) {
                 question = question.copyWith(question: text);
               },
+              onChanged: (text) {
+                setState(() {
+                  chars = text?.length ?? 0;
+                  question = question.copyWith(question: text);
+                });
+              },
               limitLenght: true,
+              suffix: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                child: Text("$chars/60"),
+              ),
               label: "Pergunta",
               value: question.question ?? "",
               validator: (value) {

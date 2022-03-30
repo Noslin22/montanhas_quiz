@@ -20,8 +20,8 @@ class _AddQuestionState extends State<AddQuestion> {
   QuestionModel question = QuestionModel.empty();
 
   final _formKey = GlobalKey<FormState>();
-
   int correctAnswer = 0;
+  int chars = 0;
 
   void changeAnswer(int? value) {
     int currentAnswer =
@@ -164,7 +164,16 @@ class _AddQuestionState extends State<AddQuestion> {
               onSaved: (text) {
                 question = question.copyWith(question: text);
               },
+              onChanged: (text) {
+                setState(() {
+                  chars = text?.length ?? 0;
+                });
+              },
               limitLenght: true,
+              suffix: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                child: Text("$chars/60"),
+              ),
               label: "Pergunta",
               validator: (value) {
                 if (value == null || value.isEmpty) {

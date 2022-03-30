@@ -61,13 +61,15 @@ class Field extends StatelessWidget {
       onChanged: onChanged,
       onSaved: onSaved,
       decoration: InputDecoration(
-        
+        counterText: "",
         labelText: "$label:",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
+          
         ),
         errorStyle: showError ? null : const TextStyle(height: 0),
         suffixIcon: suffix,
+        
       ),
     );
   }
