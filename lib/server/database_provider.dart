@@ -26,9 +26,7 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
-      headers: {
-        'authorization': credencials
-      },
+      headers: {'authorization': credencials},
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -54,9 +52,7 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/questions'),
-      headers: {
-        'authorization': credencials
-      },
+      headers: {'authorization': credencials},
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -83,9 +79,7 @@ class DatabaseProvider {
 
     Response response = await get(
       Uri.parse('https://db-montanhas.herokuapp.com/users'),
-      headers: {
-        'authorization': credencials
-      },
+      headers: {'authorization': credencials},
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
@@ -114,12 +108,14 @@ class DatabaseProvider {
     return response.statusCode == 200;
   }
 
-  Future<bool> doneQuestion(UserModel user, QuestionModel question, bool correct) async {
+  Future<bool> doneQuestion(
+      UserModel user, QuestionModel question, bool correct) async {
     String credencials = "Bearer ${user.token!}";
 
     Request request = Request(
       "POST",
-      Uri.parse('https://db-montanhas.herokuapp.com/questions/${question.id}/users'),
+      Uri.parse(
+          'https://db-montanhas.herokuapp.com/questions/${question.id}/users'),
     );
     request.headers.addAll({
       'Authorization': credencials,
@@ -186,6 +182,23 @@ class DatabaseProvider {
     return response.statusCode == 200;
   }
 
+  Future<bool> editUser(UserModel user, UserModel userEdit) async {
+    String credencials = "Bearer ${user.token!}";
+
+    Request request = Request(
+      "PUT",
+      Uri.parse('https://db-montanhas.herokuapp.com/users/${userEdit.id}'),
+    );
+    request.headers.addAll({
+      'Authorization': credencials,
+      'Content-Type': 'application/json',
+    });
+    request.body = userEdit.toJson();
+
+    StreamedResponse response = await request.send();
+    return response.statusCode == 200;
+  }
+
   Future<bool> deleteQuestion(UserModel user, String id) async {
     String credencials = "Bearer ${user.token!}";
 
@@ -202,6 +215,22 @@ class DatabaseProvider {
     if (response.statusCode == 200) {
       getQuestions(user);
     }
+    return response.statusCode == 200;
+  }
+
+  Future<bool> deleteUser(UserModel user, String id) async {
+    String credencials = "Bearer ${user.token!}";
+
+    Request request = Request(
+      "DELETE",
+      Uri.parse('https://db-montanhas.herokuapp.com/users/$id'),
+    );
+    request.headers.addAll({
+      'Authorization': credencials,
+      'Content-Type': 'application/json',
+    });
+
+    StreamedResponse response = await request.send();
     return response.statusCode == 200;
   }
 

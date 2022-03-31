@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montanhas_quiz/pages/home/home_page.dart';
 import 'package:montanhas_quiz/pages/manage_questions/manage_questions.dart';
+import 'package:montanhas_quiz/pages/manage_users/manage_users.dart';
 import 'package:montanhas_quiz/pages/prizes/prizes.dart';
 import 'package:montanhas_quiz/pages/rank/rank_page.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
@@ -22,7 +23,7 @@ class AdmDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             child: Text(
-              "Bem Vindo a área de administração\nAqui você pode adicionar, remover ou edita as perguntas e ver o Rank Geral",
+              "Bem Vindo a área de administração\nAqui você pode adicionar, remover ou editar as perguntas e ver o Rank Geral",
               textAlign: TextAlign.right,
             ),
           ),
@@ -40,10 +41,10 @@ class AdmDrawer extends StatelessWidget {
                     );
                   },
                 ),
-          screen == Screens.home || screen == Screens.manage
+          screen == Screens.home || screen == Screens.questions
               ? Container()
               : const Divider(),
-          screen == Screens.manage
+          screen == Screens.questions
               ? Container()
               : ListTile(
                   title: const Text("Gerenciar Perguntas"),
@@ -62,7 +63,6 @@ class AdmDrawer extends StatelessWidget {
               ? Container()
               : ListTile(
                   title: const Text("Rank Geral"),
-                  subtitle: const Text("Em Construção"),
                   trailing: const Icon(Icons.bar_chart),
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(
@@ -75,6 +75,25 @@ class AdmDrawer extends StatelessWidget {
                     );
                   },
                 ),
+          screen == Screens.users ? Container() : const Divider(),
+          screen == Screens.users
+              ? Container()
+              : AuthProvider().user!.email != "nilson@gmail.com" &&
+                      AuthProvider().user!.email != "denissondias@bol.com.br"
+                  ? Container()
+                  : ListTile(
+                      title: const Text("Gerenciar Usuários"),
+                      subtitle: const Text("Em Construção"),
+                      trailing: const Icon(Icons.people),
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const ManageUsers(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                    ),
           // screen == Screens.prizes ? Container() : const Divider(),
           // screen == Screens.prizes
           //     ? Container()

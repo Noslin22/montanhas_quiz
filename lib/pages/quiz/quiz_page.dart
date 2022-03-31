@@ -29,7 +29,7 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int? _answer;
   late Timer timer;
-  int counter = 15;
+  int counter = 20;
 
   @override
   void initState() {
@@ -52,12 +52,12 @@ class _QuizPageState extends State<QuizPage> {
   void startTimer() {
     timer = Timer.periodic(
       const Duration(seconds: 1),
-      (Timer timer) {
+      (Timer timer) async {
         if (counter == 0) {
           setState(() {
             timer.cancel();
           });
-          DatabaseProvider().doneQuestion(
+          await DatabaseProvider().doneQuestion(
               AuthProvider().user!,
               widget.model,
               _answer ==
@@ -104,7 +104,13 @@ class _QuizPageState extends State<QuizPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 22),
-                child: Text(counter.toString()),
+                child: Text(
+                  counter.toString(),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               Flexible(
                   child: Text(widget.model.question!,

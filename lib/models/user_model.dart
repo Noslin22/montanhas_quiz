@@ -30,6 +30,16 @@ class UserModel {
     };
   }
 
+  factory UserModel.empty() {
+    return UserModel();
+  }
+
+  bool get complete =>
+      email != null &&
+      nome != null &&
+      password != null &&
+      id != null;
+
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       nome: map["user"]['name'] ?? '',

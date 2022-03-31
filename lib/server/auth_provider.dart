@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:montanhas_quiz/models/user_model.dart';
+import 'package:montanhas_quiz/server/database_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider {

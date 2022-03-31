@@ -1,1 +1,1 @@
-enum Screens { home, manage, rank, prizes }
+enum Screens { home, questions, rank, prizes,  users}

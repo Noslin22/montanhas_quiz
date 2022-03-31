@@ -7,18 +7,20 @@ import 'package:montanhas_quiz/pages/manage_questions/pages/edit_question.dart';
 import 'package:montanhas_quiz/server/auth_provider.dart';
 import 'package:montanhas_quiz/server/database_provider.dart';
 
-class ManageQuestions extends StatefulWidget {
-  const ManageQuestions({Key? key}) : super(key: key);
+import 'pages/delete_user.dart';
+import 'pages/edit_user.dart';
+
+class ManageUsers extends StatefulWidget {
+  const ManageUsers({Key? key}) : super(key: key);
 
   @override
-  State<ManageQuestions> createState() => _ManageQuestionsState();
+  State<ManageUsers> createState() => _ManageUsersState();
 }
 
-class _ManageQuestionsState extends State<ManageQuestions> {
+class _ManageUsersState extends State<ManageUsers> {
   final AuthProvider auth = AuthProvider();
   final DatabaseProvider db = DatabaseProvider();
   final List<BottomNavigationBarItem> items = [
-    const BottomNavigationBarItem(icon: Icon(Icons.add), label: "Adicionar"),
     const BottomNavigationBarItem(icon: Icon(Icons.edit), label: "Editar"),
     const BottomNavigationBarItem(icon: Icon(Icons.delete), label: "Deletar"),
   ];
@@ -30,9 +32,8 @@ class _ManageQuestionsState extends State<ManageQuestions> {
   @override
   void initState() {
     pages = {
-      "Adicionar": const AddQuestion(),
-      "Editar": const EditQuestion(),
-      "Deletar": DeleteQuestion(auth: auth, db: db),
+      "Editar": const EditUser(),
+      "Deletar": DeleteUser(auth: auth, db: db),
     };
     super.initState();
   }
@@ -44,7 +45,7 @@ class _ManageQuestionsState extends State<ManageQuestions> {
         screen: Screens.questions,
       ),
       appBar: AppBar(
-        title: Text("${pages.keys.toList()[page]} Pergunta"),
+        title: Text("${pages.keys.toList()[page]} Usuário"),
       ),
       body: pages.values.toList()[page],
       bottomNavigationBar: BottomNavigationBar(

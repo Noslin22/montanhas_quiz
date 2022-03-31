@@ -97,7 +97,7 @@ class _RankPageState extends State<RankPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "${users.length} Adolecentes responderam",
+                          "${users.length} Adolescentes responderam",
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Colors.white,
