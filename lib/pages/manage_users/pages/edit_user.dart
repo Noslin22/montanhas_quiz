@@ -95,7 +95,7 @@ class _EditUserState extends State<EditUser> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: "Questão",
+                        labelText: "Usuário",
                         labelStyle: GoogleFonts.roboto(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
