@@ -95,6 +95,46 @@ class RankPdf {
                   ],
                 ),
               ),
+            ],
+          ),
+        ]); // Center
+      },
+    ));
+    doc.addPage(Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (Context context) {
+        return Stack(children: [
+          Center(
+            child: Opacity(
+              opacity: 0.1,
+              child: Image(
+                MemoryImage(
+                  montanhasImage.buffer.asUint8List(),
+                ),
+                width: 300,
+                height: 300,
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "IASD Central FSA - Adolescentes (Base Montanhas)",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 12),
+              Text(
+                "Boletim Semanal - ${questions.first.subtitle!.split(" ")[1].substring(0, 5)} a ${questions.last.subtitle!.split(" ")[1].substring(0, 5)}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 12),
               Divider(),
               Expanded(
                 child: Column(
@@ -129,7 +169,7 @@ class RankPdf {
                             child: Row(
                               children: [
                                 Text(
-                                  "${user.nome} - ${user.percent!.percent()}",
+                                  "${user.nome!.split(" ").getRange(0, 2).join(" ")} - ${user.percent!.percent()}",
                                   textAlign: TextAlign.left,
                                 ),
                               ],
