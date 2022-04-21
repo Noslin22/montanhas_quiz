@@ -31,10 +31,11 @@ class _LoginPageState extends State<LoginPage> {
         password: user.password!,
         save: save,
       )) {
-        Navigator.of(ctx).pushReplacement(
+        Navigator.of(ctx).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (ctx) => const HomePage(),
           ),
+          (Route<dynamic> route) => false,
         );
       } else {
         Navigator.pop(context);
